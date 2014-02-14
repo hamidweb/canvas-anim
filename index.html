@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Canvas animation - HamidRaza.net</title>
+</head>
+
+<body>
+    <canvas id="myCanvas" height="300" width="600"></canvas>
+
+    <script>
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+
+    var circleWidth = 30;
+    var arcSPoint = 0;
+    var arcEPoint = 0.1;
+
+    var posX = circleWidth;
+    posY = circleWidth;
+    var dirs = ['down', 'right', 'up', 'left'];
+    var curDirI = 0;
+    var count = 0;
+
+    setInterval(function() {
+
+        switch (dirs[curDirI]) {
+            case 'down':
+                posX = circleWidth;
+                posY++;
+                break;
+            case 'right':
+                posX++;
+                posY = c.height - circleWidth;
+                break;
+            case 'up':
+                posX = c.width - circleWidth;
+                posY--;
+                break;
+            case 'left':
+                posX--;
+                posY = circleWidth;
+                break;
+        }
+
+        if (
+            (posX == circleWidth && posY == circleWidth) ||
+            (posX == circleWidth && posY == (c.height - circleWidth)) ||
+            (posX == (c.width - circleWidth) && posY == (c.height - circleWidth)) ||
+            (posX == (c.width - circleWidth) && posY == circleWidth)
+        ) {
+            curDirI++;
+            if (curDirI >= dirs.length) {
+                curDirI = 0;
+                posX = circleWidth;
+                posY = circleWidth;
+            }
+        }
+
+        ctx.fillStyle = "rgb(0,0,0)";
+        ctx.fillRect(0, 0, c.width, c.height);
+
+        ctx.beginPath();
+        ctx.arc(posX, posY, circleWidth, 0, 2 * Math.PI);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+
+        if (count == 1) {
+            arcSPoint += 0.01;
+            arcEPoint += 0.01;
+            count = 0;
+        }
+        count++;
+        if (arcSPoint == 2) {
+            arcSPoint = 0;
+            arcEPoint = 0.1;
+        }
+
+        for (var i = 0.2; i < 20; i += 0.2) {
+            ctx.beginPath();
+            ctx.arc(posX, posY, 25, (arcSPoint + i) * Math.PI, (arcEPoint + i) * Math.PI);
+            ctx.lineWidth = 10;
+            ctx.stroke();
+        };
+    }, 10);
+    </script>
+</body>
+
+</html>
